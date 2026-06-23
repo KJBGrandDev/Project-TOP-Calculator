@@ -13,7 +13,8 @@ buttons.forEach((btn) => {
     buttonDiv.appendChild(btnElement);
 });
 
-buttonDiv.addEventListener('click', (event) => {
+let newSet = false;
+buttonDiv.addEventListener('click',(event) => {
     const btnValue = event.target.getAttribute('data-value');
     
     if(!btnValue){
@@ -21,18 +22,23 @@ buttonDiv.addEventListener('click', (event) => {
     }
 
     if(btnValue == 'C'){
-        outputScreen.textContent = ' ';
+        outputScreen.textContent = '';
     } else if (btnValue == '='){
-        console.log(outputScreen.innerText);
-        
         const answer = getAnswer(outputScreen.innerText);
         outputScreen.textContent = answer;
+        newSet = true;
     } else if (operatorButtons.includes(btnValue)) {
         console.log(`You clicked : ${btnValue}`);
         outputScreen.textContent += ` ${btnValue} `;
     } else {
-        console.log(`You clicked : ${btnValue}`);
-        outputScreen.textContent += btnValue;
+        if(newSet){
+            console.log(`You clicked : ${btnValue}`);
+            outputScreen.textContent = btnValue;
+            newSet = false;
+        } else {
+            console.log(`You clicked : ${btnValue}`);
+            outputScreen.textContent += btnValue;
+        }
     };
     
 });
@@ -44,6 +50,19 @@ function operate(operator,a,b){
         '/': (a,b) => a / b,
         '*': (a,b) => a * b,
     }
+
+    //If user didn't put a value for the first num
+    if(isNaN(a)){
+        console.log(`Substitution done!`);
+        a = 0;
+    }
+    //If user didn't put a value for the second num
+    //We let the second num copy the first num value
+    if(isNaN(b)){
+        console.log(`Substitution done!`);
+        b = a;
+    }
+
     return this.method[operator](a,b);
 }
 
@@ -54,6 +73,11 @@ function getAnswer(string){
     operator = context[1];
     b = parseInt(context[2]);
 
-    console.log(`Test: ${operate(operator,a,b)}`);
+    //If the user only clicks an operand without values
+    //We let the operator's value be the string itself
+    if(operator == undefined){
+        operator = string;
+    }
+
     return operate(operator,a,b);
 }
