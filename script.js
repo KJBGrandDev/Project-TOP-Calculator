@@ -24,6 +24,7 @@ let currentTotal = 0;
 function calcStroke(btnValue){
     if(btnValue == 'CE'){
         outputScreen.textContent = '';
+        currentTotal = 0;
     } else if(btnValue == 'C'){
 
         const text = outputScreen.innerText;
@@ -105,7 +106,6 @@ function operate(operator,a,b){
         '/': (a,b) => a / b,
         '*': (a,b) => a * b,
     }
-
     return this.method[operator](a,b);
 }
 
@@ -116,13 +116,19 @@ function getAnswer(string){
     let operator = '';
     let secondNum = 0;
 
-    if(operatorButtons.includes(context[0])){
+    if(operatorButtons.includes(context[0]) && currentTotal != 0){
         console.log(`Operator at 0!`);
         
         firstNum = +currentTotal;
         operator = context[0];
         secondNum = +context[1];
-    } else {
+    }else if(operatorButtons.includes(context[0]) && currentTotal == 0) {
+        console.log(`Test`);
+        
+        secondNum = +context[1];
+        firstNum = secondNum;
+        operator = context[0];
+    }else {
         firstNum = +context[0];
         operator = context[1];
         secondNum = +context[2]; 
