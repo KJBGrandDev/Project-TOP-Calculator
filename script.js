@@ -15,10 +15,11 @@ buttons.forEach((btn) => {
 
     buttonDiv.appendChild(btnElement);
 });
-//Checks if the current num already has a decimal in it.
+//Icheck if napislit na ang decimal point
 let decimalStroke = false;
+//Check if nalick na ang operator
 let operatorStroke = false;
-//Checks if we need to clear the screen after clicking '=' (Equal Sign)
+//Icheck if napislit na ang equal sign
 let newSet = false;
 let currentTotal = 0;
 function calcStroke(btnValue){
@@ -66,8 +67,7 @@ function calcStroke(btnValue){
         // }
 
         outputScreen.textContent += ` ${btnValue} `;
-        //Refresh the decimal existence checker after every operator
-        //Else only one num can have a decimal point
+        //Reset decimal pointer after sa operator
         newSet = false;
         decimalStroke = false;
         operatorStroke = true;
@@ -129,6 +129,10 @@ function operate(operator,a,b){
         '/': (a,b) => a / b,
         '*': (a,b) => a * b,
     }
+
+    if(isNaN(b)){
+        b = a;
+    }
     return this.method[operator](a,b);
 }
 
@@ -145,13 +149,13 @@ function getAnswer(string){
         firstNum = +currentTotal;
         operator = context[0];
         secondNum = +context[1];
-    }else if(operatorButtons.includes(context[0]) && currentTotal == 0) {
+    } else if(operatorButtons.includes(context[0]) && currentTotal == 0) {
         console.log(`Test`);
         
         secondNum = +context[1];
         firstNum = secondNum;
         operator = context[0];
-    }else {
+    } else {
         firstNum = +context[0];
         operator = context[1];
         secondNum = +context[2]; 
