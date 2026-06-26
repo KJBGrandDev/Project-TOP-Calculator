@@ -5,6 +5,7 @@ const outputScreen = document.getElementById('output');
 const operatorButtons = ['CE','C','/','*','+','-'];
 const decimal = ['.'];
 const backspace = ['X'];
+
 buttons.forEach((btn) => {
     const btnElement = document.createElement('button');
     
@@ -15,8 +16,8 @@ buttons.forEach((btn) => {
     buttonDiv.appendChild(btnElement);
 });
 //Checks if the current num already has a decimal in it.
-const decimalStroke = false;
-const operatorStroke = false;
+let decimalStroke = false;
+let operatorStroke = false;
 //Checks if we need to clear the screen after clicking '=' (Equal Sign)
 let newSet = false;
 let currentTotal = 0;
@@ -28,11 +29,11 @@ function calcStroke(btnValue){
         const text = outputScreen.innerText;
         outputScreen.innerText = text.slice(0,text.lastIndexOf(' ') + 1);
     } else if(decimal.includes(btnValue)){
-        const text = outputScreen.innerText;
         if(decimalStroke){
             return;
         } else {
             outputScreen.innerText += btnValue;
+            decimalStroke = true;
         }
     } else if(backspace.includes(btnValue)){
         const text = outputScreen.innerText;
@@ -40,7 +41,6 @@ function calcStroke(btnValue){
     } else if (btnValue == '='){
         const answer = getAnswer(outputScreen.innerText);
         outputScreen.textContent = answer;
-        currentTotal = Number(outputScreen.innerText);
         //Equal sign is pressed!
         newSet = true;
         //Refresh the decimal existence checker
@@ -105,58 +105,40 @@ function operate(operator,a,b){
         '/': (a,b) => a / b,
         '*': (a,b) => a * b,
     }
-    console.log(`\nOperation Side!!`);
-    
-    console.log(`A: ${a}`);
-    console.log(`B: ${b}`);
-    console.log(`Answer: ${a + b}`);
-    
-    
-    //If user didn't put a value for the first num
-    if(isNaN(a) && currentTotal == 0){
-        console.log(`Substitution done!`);
-        a = 0;
-    } 
-    if(isNaN(a) && currentTotal != 0){
-        console.log(`Current Total Used!`);
-        a = currentTotal;
-    }
-    //If user didn't put a value for the second num
-    //We let the second num copy the first num value
-    if(isNaN(b)){
-        console.log(`Substitution done!`);
-        b = a;
-    }
+
     return this.method[operator](a,b);
 }
 
 function getAnswer(string){
     const context = string.split(' ');
-    let total = 0;
-    let operator;
-    if(operatorButtons.includes(context[0]) && currentTotal != 0){
-        console.log(`Context 42: ${context[0]}`);
+    
+    let firstNum = 0;
+    let operator = '';
+    let secondNum = 0;
+
+    if(operatorButtons.includes(context[0])){
+        console.log(`Operator at 0!`);
         
-        total = currentTotal;
+        firstNum = +currentTotal;
+        operator = context[0];
+        secondNum = +context[1];
     } else {
-        console.log(context);
-        
-        console.log(`Context 21: ${context[0]}`);
-        total = Number(context[0]);
+        firstNum = +context[0];
+        operator = context[1];
+        secondNum = +context[2]; 
+    }
+
+    if(operator == '-' && firstNum - secondNum < 0){
+        return 0;
+    }
+
+    if(operator == '/' && secondNum == 0){
+        newSet = true;
+        return 'Cannot divide by zero';
     }
     
-    
-    for(let i = 1; i < context.length; i+=2){
-        const operator = context[i];
-        const num = Number(context[i + 1]);
-        console.log(`First Num / Total: ${total}`);
-        console.log(`Operator: ${operator}`);
-        
-        console.log(`Second num: ${num}`);
-        
-        total = operate(operator,total,num);
-        console.log(`Current Total: ${total}`);
-    }
-    console.log(total);
-    return total;
+
+    currentTotal = operate(operator,firstNum,secondNum);
+    console.log(`Current Total check: ${currentTotal}`);
+    return currentTotal;
 }
