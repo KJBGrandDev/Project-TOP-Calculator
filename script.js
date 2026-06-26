@@ -25,10 +25,11 @@ function calcStroke(btnValue){
     if(btnValue == 'CE'){
         outputScreen.textContent = '';
         currentTotal = 0;
+        resetFunc();
     } else if(btnValue == 'C'){
-
         const text = outputScreen.innerText;
         outputScreen.innerText = text.slice(0,text.lastIndexOf(' ') + 1);
+        resetFunc();
     } else if(decimal.includes(btnValue)){
         if(decimalStroke){
             return;
@@ -40,29 +41,36 @@ function calcStroke(btnValue){
         const text = outputScreen.innerText;
         outputScreen.innerText = text.slice(0,-1);
     } else if (btnValue == '='){
-        const answer = getAnswer(outputScreen.innerText);
-        outputScreen.textContent = answer;
-        //Equal sign is pressed!
-        newSet = true;
-        //Refresh the decimal existence checker
-        decimalStroke = false;
+        equalSign();
     } else if (operatorButtons.includes(btnValue)) {
         console.log(`You clicked : ${btnValue}`);
-        if(newSet){
-            console.log(`You clicked : ${btnValue}`);
-            //Replace the screen text with the current button pressed
-            outputScreen.textContent = ` ${btnValue} `;
-            newSet = false;
+        if(operatorStroke){
+            console.log(`Double Stroke`);
+            
+            const answer = getAnswer(outputScreen.innerText);
+            outputScreen.innerText = answer;
+            outputScreen.textContent += ` ${btnValue} `;
+            operatorStroke = true;
             return;
         }
-        if(outputScreen.textContent.endsWith(' ') && currentTotal == 0){
-            outputScreen.textContent = outputScreen.textContent.slice(0,-3);
-        }
+        // if(newSet){
+        //     console.log(`You clicked : ${btnValue}`);
+        //     //Replace the screen text with the current button pressed
+        //     outputScreen.textContent = ` ${btnValue} `;
+        //     newSet = false;
+        //     operatorStroke = true;
+        //     return;
+        // }
+        // if(outputScreen.textContent.endsWith(' ') && currentTotal == 0){
+        //     outputScreen.textContent = outputScreen.textContent.slice(0,-3);
+        // }
 
         outputScreen.textContent += ` ${btnValue} `;
         //Refresh the decimal existence checker after every operator
         //Else only one num can have a decimal point
+        newSet = false;
         decimalStroke = false;
+        operatorStroke = true;
     } else {
         //'=' Equal Sign is clicked?
         if(newSet){
@@ -98,6 +106,21 @@ document.addEventListener('keydown', (event) => {
         calcStroke(nums);
     };
 });
+
+function equalSign(){
+    const answer = getAnswer(outputScreen.innerText);
+    outputScreen.textContent = answer;
+    //Equal sign is pressed!
+    newSet = true;
+    //Refresh the decimal existence checker
+    decimalStroke = false;
+    operatorStroke = false;
+}
+
+function resetFunc(){
+    decimalStroke = false;
+    operatorStroke = false;
+}
 
 function operate(operator,a,b){
     this.method = {
