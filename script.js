@@ -39,8 +39,25 @@ function calcStroke(btnValue){
             decimalStroke = true;
         }
     } else if(backspace.includes(btnValue)){
-        const text = outputScreen.innerText;
-        outputScreen.innerText = text.slice(0,-1);
+        const oldText = outputScreen.innerText;
+        let newText = oldText.slice(0,-1);
+        outputScreen.innerText = newText;
+        console.log(newText);
+        
+        const hasOperator = operatorButtons.some(op => newText.includes(op));
+        const hasDecimal = decimal.some(dec => newText.includes(dec));
+
+        if(!hasDecimal && decimalStroke == true){
+            console.log(`Decimal Buttons!`);
+            decimalStroke = false;
+        } else {
+            //Mareset ang decimal stroke bisan wala na ang operator, so double check ta
+            decimalStroke = true;
+        }
+        if(!hasOperator && operatorStroke == true){
+            console.log(`Operator Buttons!`);
+            operatorStroke = false;
+        }
     } else if (btnValue == '='){
         equalSign();
     } else if (operatorButtons.includes(btnValue)) {
@@ -161,9 +178,9 @@ function getAnswer(string){
         secondNum = +context[2]; 
     }
 
-    if(operator == '-' && firstNum - secondNum < 0){
-        return 0;
-    }
+    // if(operator == '-' && firstNum - secondNum < 0){
+    //     return 0;
+    // }
 
     if(operator == '/' && secondNum == 0){
         newSet = true;
