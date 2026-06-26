@@ -24,3 +24,7 @@
     height: 20px;
     font-size: 8px;
 }
+
+.calc_button[data-value="="] {
+    grid-column: span 2;
+}
