@@ -1,30 +1,122 @@
-#output_screen{
+/* --- 1. GLOBAL & BODY --- */
+body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    min-height: 100vh;
     display: flex;
-    box-sizing: border-box;
+    justify-content: center;
     align-items: center;
-    justify-content: right;
-    height: 20px;
-    max-width: 112px;
-    background-color: rgba(219, 219, 219, 0.4);
-    padding: 2px;
     margin: 0;
-    margin-bottom: 5px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+/* --- 2. THE CALCULATOR CHASIS --- */
+#calculator_body {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    width: 320px;
+}
+
+/* --- 3. THE DISPLAY SCREEN --- */
+#output_screen {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    height: 80px;
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    border: 1px inset rgba(255, 255, 255, 0.05);
+}
+
+#output {
+    margin: 0;
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    word-break: break-all;
+}
+
+/* --- 4. THE BUTTON GRID --- */
 #button_div {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 3px;
-    max-width:112px;
+    gap: 12px;
 }
 
-.calc_button{
+/* --- 5. BASE BUTTON STYLING --- */
+.calc_button {
+    height: 60px;
     border: none;
-    border-radius: 5px;
-    height: 20px;
-    font-size: 8px;
+    border-radius: 14px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Hover & Active (Click) Animations */
+.calc_button:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+}
+
+.calc_button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+/* --- 6. COLOR CODING (SMART ATTRIBUTE TARGETING) --- */
+
+/* Math Operators (Orange) */
+.calc_button[data-value="/"],
+.calc_button[data-value="*"],
+.calc_button[data-value="-"],
+.calc_button[data-value="+"] {
+    background: #f59e0b;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.calc_button[data-value="/"]:hover,
+.calc_button[data-value="*"]:hover,
+.calc_button[data-value="-"]:hover,
+.calc_button[data-value="+"]:hover {
+    background: #d97706;
+}
+
+/* Action / Clear Keys (Soft Red/Rose) */
+.calc_button[data-value="C"],
+.calc_button[data-value="CE"],
+.calc_button[data-value="X"] {
+    background: rgba(244, 63, 94, 0.2);
+    color: #f43f5e;
+}
+
+.calc_button[data-value="C"]:hover,
+.calc_button[data-value="CE"]:hover,
+.calc_button[data-value="X"]:hover {
+    background: rgba(244, 63, 94, 0.35);
+}
+
+/* Equals Button (Spans 2 cols & Vivid Emerald Green) */
 .calc_button[data-value="="] {
     grid-column: span 2;
+    background: #10b981;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.calc_button[data-value="="]:hover {
+    background: #059669;
 }
